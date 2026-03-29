@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protext Poster Lab</title>
+  <link rel="stylesheet" href="./shared.css">
+</head>
+<body>
+  <div class="page-shell">
+    <div class="demo-actions" style="margin-bottom:16px">
+      <a class="button secondary" href="./index.html">Back to Gallery</a>
+    </div>
+    <div class="layout">
+      <section class="panel">
+        <div class="eyebrow">Poster Lab</div>
+        <h2>Responsive poster composition</h2>
+        <div class="field">
+          <label for="title">Title</label>
+          <textarea id="title">Signals for the next release</textarea>
+        </div>
+        <div class="field">
+          <label for="kicker">Kicker</label>
+          <input id="kicker" value="Experimental launch system">
+        </div>
+        <div class="field">
+          <label for="font">Font</label>
+          <input id="font" value="700 28px Georgia, serif">
+        </div>
+        <div class="field">
+          <label for="width">Title width</label>
+          <input id="width" type="range" min="180" max="520" value="320">
+        </div>
+        <div class="demo-actions">
+          <button id="render">Render Poster</button>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="poster-stage">
+          <div class="poster-kicker" id="poster-kicker"></div>
+          <h1 class="poster-title" id="poster-title"></h1>
+          <div class="poster-lines" id="poster-lines"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="./poster-lab.js"></script>
+</body>
+</html>

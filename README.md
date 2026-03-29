@@ -1,78 +1,206 @@
-# Protext 🦀 🕸️
+# Protext
 
-**Protext** is a high-performance text layout and line-breaking engine written in **Rust** and compiled to **WebAssembly**.
+**Protext** is a Rust + WebAssembly text measurement and line-wrapping engine that uses the browser's Canvas 2D API as the measurement source of truth.
 
-It is designed to solve the "Canvas Measurement Problem" by using the browser's native Canvas API as the ground truth for typography, while moving the heavy lifting of layout logic, Unicode segmentation, and boundary calculations into a memory-safe, blazing-fast Rust core.
+The current project provides:
 
-## 🚀 Key Features
+- A browser-backed `ProtextEngine` exported through `wasm-bindgen`
+- Font-aware width measurement through `measureText`
+- Greedy line wrapping with explicit paragraph-break preservation
+- Structured layout output for JavaScript consumers
+- Layout summary helpers for line count, max width, and estimated height
+- Structured measurement helpers for text, words, and paragraph counts
+- Unit tests for the pure layout core and browser tests for the Wasm API
+- A multi-demo browser showcase
 
-  * **Rust Core:** Leverages Rust's speed and safety for complex text-wrapping algorithms.
-  * **Wasm-Native:** Zero-overhead communication between JavaScript and the layout engine.
-  * **Canvas Ground Truth:** Uses `web-sys` to access the browser's `measureText` API, ensuring 100% visual consistency with the UI.
-  * **Zero Dependencies:** Lightweight and focused on performance.
-  * **Server-Side Ready:** Can be extended to run in Node.js or Deno environments.
+## Status
 
-## 📦 Installation
+This repository is a working foundation, not a full typography engine yet.
 
-To use **Protext** in your web project, you'll first need to build the Wasm package:
+Implemented today:
+
+- Canvas-backed measurement
+- Rust layout core
+- Long-token splitting when a word exceeds the line width
+- JavaScript measurement, layout, and summary APIs
+- Buildable `wasm-pack` package
+
+Not implemented yet:
+
+- Unicode line breaking per UAX #14
+- Bidi support
+- Hyphenation
+- Node.js or Deno-specific adapters
+
+## Installation
 
 ```bash
-# Install wasm-pack if you haven't already
 cargo install wasm-pack
-
-# Build the project for the browser
 wasm-pack build --target web
 ```
 
-## 🛠️ Usage (JavaScript/TypeScript)
+The generated package is written to `pkg/`.
 
-```javascript
-import init, { ProtextEngine } from './pkg/protext.js';
+## JavaScript Usage
+
+```js
+import init, { ProtextEngine } from "./pkg/protext.js";
 
 async function start() {
-    // Initialize the Wasm module
-    await init();
+  await init();
 
-    // Create a new layout engine instance
-    const engine = new ProtextEngine();
+  const engine = new ProtextEngine();
+  engine.set_font("600 16px Inter, sans-serif");
 
-    // Set your typography styles
-    engine.set_font("600 16px 'Inter', sans-serif");
+  const text = "Protext brings high-performance typography to the web.";
+  const width = engine.measure_width(text);
+  const lines = Array.from(engine.layout_lines(text, 220));
+  const detailed = Array.from(engine.layout_text(text, 220));
 
-    // Measure text with Rust-speed and Canvas-accuracy
-    const text = "Protext brings high-performance typography to the web.";
-    const width = engine.measure_width(text);
-    
-    console.log(`Measured Width: ${width}px`);
+  console.log("width:", width);
+  console.log("lines:", lines);
+  console.log("layout:", detailed);
 }
 
 start();
 ```
 
-## 🏗️ Project Structure
+## Public API
 
-  * `src/lib.rs`: The Rust source containing the `ProtextEngine` and layout logic.
-  * `Cargo.toml`: Project metadata and `web-sys` dependencies.
-  * `pkg/`: (Generated) The compiled Wasm and JS glue code.
+`ProtextEngine` exposes:
 
-## 🛠 Development
+- `new()`
+- `set_font(font: string)`
+- `font(): string`
+- `measure_width(text: string): number`
+- `measure_text(text: string): { text, width, characterCount, wordCount, paragraphCount, empty }`
+- `layout_lines(text: string, max_width: number): string[]`
+- `layout_text(text: string, max_width: number): Array<{ text, width, paragraphIndex, hardBreak }>`
+- `line_count(text: string, max_width: number): number`
+- `max_line_width(text: string, max_width: number): number`
+- `estimate_height(text: string, max_width: number, line_height: number): number`
+- `layout_summary(text: string, max_width: number, line_height: number): { lineCount, maxLineWidth, totalHeight, paragraphCount }`
 
-### Prerequisites
+`layout_text()` returns one object per laid out line:
 
-  * [Rust](https://www.rust-lang.org/) (latest stable)
-  * [wasm-pack](https://www.google.com/search?q=https://rustwasm.github.io/wasm-pack/)
+```json
+{
+  "text": "Protext brings",
+  "width": 118.25,
+  "paragraphIndex": 0,
+  "hardBreak": false
+}
+```
 
-### Running Tests
+`measure_text()` returns:
+
+```json
+{
+  "text": "alpha beta",
+  "width": 74.25,
+  "characterCount": 10,
+  "wordCount": 2,
+  "paragraphCount": 1,
+  "empty": false
+}
+```
+
+`layout_summary()` returns:
+
+```json
+{
+  "lineCount": 3,
+  "maxLineWidth": 118.25,
+  "totalHeight": 72,
+  "paragraphCount": 1
+}
+```
+
+## Examples
+
+A multi-demo browser showcase lives in `examples/`.
+
+Build the package:
+
+```bash
+wasm-pack build --target web
+```
+
+Serve the repository root with a static server:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then open:
+
+```text
+http://localhost:8000/examples/index.html
+```
+
+## Testing
+
+Run host-side unit tests:
+
+```bash
+cargo test
+```
+
+Build the browser package:
+
+```bash
+wasm-pack build --target web
+```
+
+Run browser/Wasm tests if your local Chrome and ChromeDriver pairing supports `wasm-pack` correctly:
 
 ```bash
 wasm-pack test --headless --chrome
 ```
 
-## 🤝 Contributing
+In this environment, the Rust crate and demo assets verify correctly, but the ChromeDriver run still fails with a local `http status: 404` from the browser test runner. That is an execution-environment issue, not a Rust compilation issue.
 
-This project is an evolution of the Pretext concept, optimized for low-level systems performance. Contributions regarding Unicode line-breaking (UAX \#14) and Bidi support are highly welcome.
+## Demo Suite
 
------
+The repository now ships a gallery and five demos:
+
+- `examples/index.html`
+- `examples/playground.html`
+- `examples/kinetic-lines.html`
+- `examples/poster-lab.html`
+- `examples/canvas-overlay.html`
+- `examples/resize-lab.html`
+
+Quick commands:
+
+```bash
+make check
+make test
+make build
+make serve
+```
+
+## Project Structure
+
+- `src/lib.rs`: Wasm exports and the layout core
+- `tests/web.rs`: browser-side Wasm tests
+- `examples/index.html`: demo gallery landing page
+- `examples/shared.css`: shared visual system for the demo suite
+- `examples/shared.js`: shared wasm/bootstrap helpers for demos
+- `examples/playground.html`: interactive layout console
+- `examples/kinetic-lines.html`: animated line reflow demo
+- `examples/poster-lab.html`: poster composition demo
+- `examples/canvas-overlay.html`: canvas line-bound overlay demo
+- `examples/resize-lab.html`: resize stress-test demo
+- `Makefile`: common check, test, build, and serve commands
+- `Cargo.toml`: crate metadata and dependencies
+- `pkg/`: generated Wasm output
+
+## License
+
+MIT
+
+---
 
 **Developed by:** [Mehmet T. AKALIN](https://github.com/makalin)  
 **Company:** [Digital Vision](https://dv.com.tr)  

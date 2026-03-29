@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protext Canvas Overlay</title>
+  <link rel="stylesheet" href="./shared.css">
+</head>
+<body>
+  <div class="page-shell">
+    <div class="demo-actions" style="margin-bottom:16px">
+      <a class="button secondary" href="./index.html">Back to Gallery</a>
+    </div>
+    <div class="layout">
+      <section class="panel">
+        <div class="eyebrow">Canvas Overlay</div>
+        <h2>Measured line bounds</h2>
+        <div class="field">
+          <label for="font">Font</label>
+          <input id="font" value="700 24px Avenir Next, sans-serif">
+        </div>
+        <div class="field">
+          <label for="width">Wrap width</label>
+          <input id="width" type="range" min="220" max="620" value="360">
+        </div>
+        <div class="field">
+          <label for="text">Text</label>
+          <textarea id="text">Canvas overlays make it easier to debug line starts, max width, and how content shifts as a layout becomes tighter.</textarea>
+        </div>
+        <pre id="debug"></pre>
+      </section>
+      <section class="panel canvas-card">
+        <canvas id="canvas" width="760" height="520" style="width:100%; height:auto; display:block;"></canvas>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="./canvas-overlay.js"></script>
+</body>
+</html>

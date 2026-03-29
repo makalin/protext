@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protext Kinetic Lines</title>
+  <link rel="stylesheet" href="./shared.css">
+</head>
+<body>
+  <div class="page-shell">
+    <div class="demo-actions" style="margin-bottom:16px">
+      <a class="button secondary" href="./index.html">Back to Gallery</a>
+    </div>
+    <div class="layout">
+      <section class="panel">
+        <div class="eyebrow">Kinetic Lines</div>
+        <h2>Animated reflow</h2>
+        <div class="field">
+          <label for="font">Font</label>
+          <input id="font" value="800 34px Avenir Next, sans-serif">
+        </div>
+        <div class="field">
+          <label for="text">Text</label>
+          <textarea id="text">Measured lines pulse across a moving width range so you can watch where each break appears, collapses, and expands.</textarea>
+        </div>
+        <div class="demo-actions">
+          <button id="toggle">Pause</button>
+          <button id="reset" class="secondary">Reset Width Sweep</button>
+        </div>
+        <pre id="stats" style="margin-top:18px"></pre>
+      </section>
+      <section class="panel">
+        <div class="kinetic-stage" id="stage"></div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="./kinetic-lines.js"></script>
+</body>
+</html>

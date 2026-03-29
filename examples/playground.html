@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protext Playground</title>
+  <link rel="stylesheet" href="./shared.css">
+</head>
+<body>
+  <div class="page-shell">
+    <div class="demo-actions" style="margin-bottom:16px">
+      <a class="button secondary" href="./index.html">Back to Gallery</a>
+    </div>
+    <div class="layout">
+      <section class="panel">
+        <div class="eyebrow">Playground</div>
+        <h2>Interactive layout console</h2>
+        <div class="field">
+          <label for="font">Font</label>
+          <input id="font" value="700 20px Georgia, serif">
+        </div>
+        <div class="field">
+          <label for="width">Max width</label>
+          <input id="width" type="range" min="120" max="560" value="280">
+        </div>
+        <div class="field">
+          <label for="line-height">Line height</label>
+          <input id="line-height" type="range" min="18" max="52" value="28">
+        </div>
+        <div class="field">
+          <label for="text">Text</label>
+          <textarea id="text">Protext uses the browser canvas as the measurement ground truth while Rust handles line layout, summaries, and overflow-aware line splitting.</textarea>
+        </div>
+        <div class="demo-actions">
+          <button id="render">Render</button>
+          <button id="preset" class="secondary">Swap Text</button>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="overlay-grid">
+          <div class="preview-card">
+            <div class="eyebrow">Preview</div>
+            <div class="preview-frame" id="preview-frame">
+              <div id="preview-copy" style="position:absolute; inset:28px; max-width:280px"></div>
+            </div>
+          </div>
+          <div class="stack" style="display:grid; gap:18px">
+            <div>
+              <h3>Summary</h3>
+              <pre id="summary"></pre>
+            </div>
+            <div>
+              <h3>Measurement</h3>
+              <pre id="measurement"></pre>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:18px">
+          <h3>Lines</h3>
+          <ul class="line-list" id="lines"></ul>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="./playground.js"></script>
+</body>
+</html>

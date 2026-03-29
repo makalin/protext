@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Protext Resize Lab</title>
+  <link rel="stylesheet" href="./shared.css">
+</head>
+<body>
+  <div class="page-shell">
+    <div class="demo-actions" style="margin-bottom:16px">
+      <a class="button secondary" href="./index.html">Back to Gallery</a>
+    </div>
+    <div class="layout">
+      <section class="panel">
+        <div class="eyebrow">Resize Lab</div>
+        <h2>Responsive stress test</h2>
+        <div class="field">
+          <label for="font">Font</label>
+          <input id="font" value="700 18px Avenir Next, sans-serif">
+        </div>
+        <div class="field">
+          <label for="text">Text</label>
+          <textarea id="text">Drag the handle on the resizable shell to stress line count, estimated height, and max rendered width while the container continuously changes shape.</textarea>
+        </div>
+        <pre id="summary"></pre>
+      </section>
+      <section class="panel resize-stage">
+        <div class="resizable-shell">
+          <div class="resizable-target" id="target"></div>
+        </div>
+        <div class="panel" style="padding:18px">
+          <div class="eyebrow">Recent samples</div>
+          <div class="sparkline" id="sparkline"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="./resize-lab.js"></script>
+</body>
+</html>
